@@ -1,0 +1,7 @@
+{
+  "name": "lab4",
+  "image": "gcc:latest",
+  "extensions": [
+    "ms-vscode.cpptools"
+  ]
+}

@@ -1,0 +1,54 @@
+execve("./parent", ["./parent"], 0x7fff524c0200 /* 30 vars */) = 0
+brk(NULL)                               = 0x11f9b000
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7d477ab65000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=29003, ...}) = 0
+mmap(NULL, 29003, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7d477ab5d000
+close(3)                                = 0
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0p\236\2\0\0\0\0\0"..., 832) = 832
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 840, 64) = 840
+fstat(3, {st_mode=S_IFREG|0755, st_size=2003408, ...}) = 0
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 840, 64) = 840
+mmap(NULL, 2055800, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7d477a967000
+mmap(0x7d477a98f000, 1462272, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7d477a98f000
+mmap(0x7d477aaf4000, 352256, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x18d000) = 0x7d477aaf4000
+mmap(0x7d477ab4a000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1e2000) = 0x7d477ab4a000
+mmap(0x7d477ab50000, 52856, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7d477ab50000
+close(3)                                = 0
+mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7d477a964000
+arch_prctl(ARCH_SET_FS, 0x7d477a964740) = 0
+set_tid_address(0x7d477a964a10)         = 45781
+set_robust_list(0x7d477a964a20, 24)     = 0
+rseq(0x7d477a964680, 0x20, 0, 0x53053053) = 0
+mprotect(0x7d477ab4a000, 16384, PROT_READ) = 0
+mprotect(0x403000, 4096, PROT_READ)     = 0
+mprotect(0x7d477ab9b000, 8192, PROT_READ) = 0
+prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+munmap(0x7d477ab5d000, 29003)           = 0
+pipe2([3, 4], 0)                        = 0
+pipe2([5, 6], 0)                        = 0
+fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}) = 0
+getrandom("\xa4\xcf\xb8\x69\x52\xec\x30\x5f", 8, GRND_NONBLOCK) = 8
+brk(NULL)                               = 0x11f9b000
+brk(0x11fbc000)                         = 0x11fbc000
+fstat(0, {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}) = 0
+write(1, "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \320\270\320\274\321\217 \321\204\320\260\320\271\320\273\320\260"..., 34) = 34
+read(0, "output\n", 1024)               = 7
+rt_sigprocmask(SIG_BLOCK, ~[], [], 8)   = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7d477a964a10) = 45828
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+close(3)                                = 0
+close(6)                                = 0
+read(0, "", 1024)                       = 0
+close(4)                                = 0
+read(5, "\33[32mOK\n\33[0m", 127)       = 12
+write(1, "Msg frm child: \33[32mOK\n\33[0m\n", 28) = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=45828, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+write(1, "Msg frm child: \33[32mOK\n\33[0m\n", 28) = 28
+read(5, "", 127)                        = 0
+close(5)                                = 0
+write(1, "\33[0m", 4)                   = 4
+exit_group(0)                           = ?
++++ exited with 0 +++
