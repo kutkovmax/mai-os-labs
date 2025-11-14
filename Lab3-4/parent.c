@@ -2,127 +2,102 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
-#include <ctype.h>
+#include <string.h>
+#include <errno.h>
 
-#define FILENAME_MAX_LEN 256
+#define SHM_NAME "shared.bin"
+#define MAX_NUMS 100
+
+typedef struct {
+    int count;
+    float nums[MAX_NUMS];
+} SharedData;
 
 int main() {
-    int pipe_fd[2];
+    char filename[256];
+    printf("Введите имя файла: ");
+    scanf("%s", filename);
+    getchar(); // убрать '\n'
 
-    if (pipe(pipe_fd) == -1) {
-        perror("pipe");
+    // создаём/очищаем отображаемый файл
+    int shm_fd = open(SHM_NAME, O_RDWR | O_CREAT | O_TRUNC, 0666);
+    if (shm_fd == -1) {
+        perror("open shared file");
         exit(1);
     }
 
-    char filename[FILENAME_MAX_LEN];
-    printf("Введите имя файла: ");
-    scanf("%s", filename);
-    getchar(); // съесть '\n' после имени файла
-
-    int file_fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (file_fd == -1) {
-        perror("open");
-        
-        if (close(pipe_fd[0]) == -1) perror("close pipe_fd[0]");
-        if (close(pipe_fd[1]) == -1) perror("close pipe_fd[1]");
+    // задаём размер памяти под структуру
+    if (ftruncate(shm_fd, sizeof(SharedData)) == -1) {
+        perror("ftruncate");
+        close(shm_fd);
         exit(1);
+    }
+
+    SharedData *data = mmap(NULL, sizeof(SharedData),
+                            PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
+    if (data == MAP_FAILED) {
+        perror("mmap");
+        close(shm_fd);
+        exit(1);
+    }
+
+    data->count = 0;
+
+    printf("Введите числа (через пробел, Enter — завершить ввод): ");
+
+    float num;
+    int c;
+    char buffer[64];
+    int i = 0;
+
+    while ((c = getchar()) != '\n' && c != EOF) {
+        if ((c >= '0' && c <= '9') || c == '.' || c == '-' || c == '+') {
+            if (i < (int)sizeof(buffer) - 1)
+                buffer[i++] = (char)c;
+        } else if ((c == ' ' || c == '\t') && i > 0) {
+            buffer[i] = '\0';
+            num = strtof(buffer, NULL);
+            if (data->count < MAX_NUMS)
+                data->nums[data->count++] = num;
+            i = 0;
+        }
+    }
+    if (i > 0) { // последнее число перед Enter
+        buffer[i] = '\0';
+        num = strtof(buffer, NULL);
+        if (data->count < MAX_NUMS)
+            data->nums[data->count++] = num;
     }
 
     pid_t pid = fork();
     if (pid == -1) {
         perror("fork");
-        
-        if (close(pipe_fd[0]) == -1) perror("close pipe_fd[0]");
-        if (close(pipe_fd[1]) == -1) perror("close pipe_fd[1]");
-        if (close(file_fd) == -1) perror("close file_fd");
+        munmap(data, sizeof(SharedData));
+        close(shm_fd);
         exit(1);
     }
 
     if (pid == 0) {
-        // дочерний процесс
-        if (dup2(pipe_fd[0], STDIN_FILENO) == -1) { 
-            perror("dup2 pipe_fd[0]");
-            exit(1);
-        }
-        if (close(pipe_fd[0]) == -1) { 
-            perror("close pipe_fd[0]");
-            exit(1);
-        }
-        if (close(pipe_fd[1]) == -1) { 
-            perror("close pipe_fd[1]");
-            exit(1);
-        }
-
-        if (dup2(file_fd, STDOUT_FILENO) == -1) { 
-            perror("dup2 file_fd");
-            exit(1);
-        }
-        if (close(file_fd) == -1) { 
-            perror("close file_fd");
-            exit(1);
-        }
-
-        execl("./child", "child", NULL);
-        perror("exec"); // если exec не выполнился
+        execl("./child", "child", filename, NULL);
+        perror("execl");
         exit(1);
     } else {
-        // родительский процесс
-        if (close(pipe_fd[0]) == -1) { 
-            perror("close pipe_fd[0]");
-            exit(1);
-        }
-        if (close(file_fd) == -1) { 
-            perror("close file_fd");
-            exit(1);
-        }
-
-        printf("Введите числа (через пробел, Enter — завершить ввод): ");
-
-        float num;
-        int count = 0;
-        int c;
-        char buffer[64]; // временный буфер для одного числа
-        int i = 0;
-
-        while ((c = getchar()) != '\n' && c != EOF) {
-            if (isdigit(c) || c == '.' || c == '-' || c == '+') {
-                if (i < (int)sizeof(buffer) - 1)
-                    buffer[i++] = (char)c;
-            } else if (isspace(c) && i > 0) {
-                buffer[i] = '\0';
-                num = strtof(buffer, NULL);
-                if (write(pipe_fd[1], &num, sizeof(num)) == -1) { 
-                    perror("write");
-                    break;
-                }
-                count++;
-                i = 0;
-            }
-        }
-
-        // обработка последнего числа перед '\n'
-        if (i > 0) {
-            buffer[i] = '\0';
-            num = strtof(buffer, NULL);
-            if (write(pipe_fd[1], &num, sizeof(num)) == -1) { 
-                perror("write (last)");
-            } else {
-                count++;
-            }
-        }
-
-        printf("Отправлено чисел: %d\n", count);
-        if (close(pipe_fd[1]) == -1) { 
-            perror("close pipe_fd[1]");
-            exit(1);
-        }
-
-        if (wait(NULL) == -1) { 
+        if (wait(NULL) == -1) {
             perror("wait");
-            exit(1);
         }
     }
+
+    if (munmap(data, sizeof(SharedData)) == -1)
+        perror("munmap");
+
+    if (close(shm_fd) == -1)
+        perror("close");
+
+    if (unlink(SHM_NAME) == -1)
+        perror("unlink");
 
     return 0;
 }
