@@ -125,7 +125,6 @@ int main(int argc, char *argv[]) {
 
     int chunk_size = text_len / num_threads;
 
-
     // Начинаем замер времени ТОЛЬКО для ожидания завершения работы потоков
     clock_gettime(CLOCK_MONOTONIC, &start_time);
 
