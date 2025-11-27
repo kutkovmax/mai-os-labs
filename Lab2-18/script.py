@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
+import matplotlib
+matplotlib.use("Qt5Agg")
+
+
 import subprocess
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import os
+
 
 def run_experiment(text, pattern, threads, repetitions=3):
     """Запускает программу с заданными параметрами через стандартный ввод"""
@@ -56,10 +61,14 @@ def run_experiment(text, pattern, threads, repetitions=3):
 def main():
     # Тестовые данные
     test_cases = [
-        ("a" * 1000 + "abc" + "b" * 1000, "abc", "Маленькая строка"),
-        ("a" * 10000 + "abc" + "b" * 10000, "abc", "Средняя строка"),
-        ("a" * 50000 + "abc" + "b" * 50000, "abc", "Большая строка"), 
-        ("a" * 100000 + "abc" + "b" * 100000, "abc", "Очень большая строка"),
+
+        # ("a" * 1000_000 + "abc" + "b" * 1000_000, "abc", "2 ляма"),
+        ("a" * 10_000_000 + "abc" + "b" * 10_000_000, "abc", "20 mln"),
+        ("a" * 25_000_000 + "abc" + "b" * 25_000_000, "abc", "50 mln"),
+        ("a" * 50_000_000 + "abc" + "b" * 50_000_000, "abc", "100 mln"),
+        ("a" * 250_000_000 + "abc" + "b" * 250_000_000, "abc", "500 mln"),
+        # ("a" * 500_000_000 + "abc" + "b" * 500_000_000, "abc", "1 bill"),
+        
     ]
     
     all_results = []
@@ -72,7 +81,7 @@ def main():
         
         results = []
         # Тестируем 1, 2, 4, 6, 8 потоков
-        threads_to_test = [1, 2, 4, 6, 8]
+        threads_to_test = [1, 2, 4, 6, 8, 12, 16, 32]
         
         for threads in threads_to_test:
             print(f"Запуск с {threads} потоками...", end=' ')
@@ -113,79 +122,83 @@ def main():
         print("Нет данных для анализа")
 
 def plot_results(df):
-    """Строит графики результатов"""
+    """Строит графики результатов с равномерным расположением потоков по X"""
     fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-    
-    colors = {
-        'Маленькая строка': 'blue', 
-        'Средняя строка': 'red', 
-        'Большая строка': 'green',
-        'Очень большая строка': 'purple'
-    }
-    
-    # График 1: Время выполнения
+    markers = ['o', 's', 'D', 'X', '^', 'v']
+    unique_tests = list(df['test_case'].unique())
+
+    threads_to_plot = [1, 2, 4, 6, 8, 12, 16, 32]
+    x_labels = [str(t) for t in threads_to_plot]  # метки по X
+
+    # === Время выполнения ===
     ax1 = axes[0, 0]
-    for test_case in df['test_case'].unique():
+    for i, test_case in enumerate(unique_tests):
         case_data = df[df['test_case'] == test_case]
-        ax1.plot(case_data['threads'], case_data['time'], 'o-', 
-                label=test_case, color=colors.get(test_case, 'black'), linewidth=2, markersize=6)
+        y = [case_data[case_data['threads']==t]['time'].values[0] for t in threads_to_plot]
+        ax1.plot(range(len(threads_to_plot)), y,
+                 marker=markers[i % len(markers)],
+                 linewidth=2, label=test_case)
+    ax1.set_xticks(range(len(threads_to_plot)))
+    ax1.set_xticklabels(x_labels)
     ax1.set_xlabel('Количество потоков')
     ax1.set_ylabel('Время (секунды)')
     ax1.set_title('Время выполнения поиска')
     ax1.legend()
     ax1.grid(True, alpha=0.3)
-    ax1.set_xticks([1, 2, 4, 6, 8])
-    
-    # График 2: Ускорение
+
+    # === Ускорение ===
     ax2 = axes[0, 1]
-    for test_case in df['test_case'].unique():
+    for i, test_case in enumerate(unique_tests):
         case_data = df[df['test_case'] == test_case]
-        ax2.plot(case_data['threads'], case_data['speedup'], 'o-', 
-                label=test_case, color=colors.get(test_case, 'black'), linewidth=2, markersize=6)
-    # Идеальное ускорение
-    ideal_threads = [1, 2, 4, 6, 8]
-    ax2.plot(ideal_threads, ideal_threads, 'k--', label='Идеальное ускорение', alpha=0.7)
+        y = [case_data[case_data['threads']==t]['speedup'].values[0] for t in threads_to_plot]
+        ax2.plot(range(len(threads_to_plot)), y,
+                 marker=markers[i % len(markers)],
+                 linewidth=2, label=test_case)
+    #ax2.plot(range(len(threads_to_plot)), range(1,len(threads_to_plot)+1), 'k--', label='Идеальное ускорение')
+    ax2.set_xticks(range(len(threads_to_plot)))
+    ax2.set_xticklabels(x_labels)
     ax2.set_xlabel('Количество потоков')
     ax2.set_ylabel('Ускорение')
     ax2.set_title('Ускорение (Speedup)')
     ax2.legend()
     ax2.grid(True, alpha=0.3)
-    ax2.set_xticks([1, 2, 4, 6, 8])
-    
-    # График 3: Эффективность
+
+    # === Эффективность ===
     ax3 = axes[1, 0]
-    for test_case in df['test_case'].unique():
+    for i, test_case in enumerate(unique_tests):
         case_data = df[df['test_case'] == test_case]
-        ax3.plot(case_data['threads'], case_data['efficiency'], 'o-', 
-                label=test_case, color=colors.get(test_case, 'black'), linewidth=2, markersize=6)
+        y = [case_data[case_data['threads']==t]['efficiency'].values[0] for t in threads_to_plot]
+        ax3.plot(range(len(threads_to_plot)), y,
+                 marker=markers[i % len(markers)],
+                 linewidth=2, label=test_case)
+    ax3.set_xticks(range(len(threads_to_plot)))
+    ax3.set_xticklabels(x_labels)
     ax3.set_xlabel('Количество потоков')
     ax3.set_ylabel('Эффективность')
     ax3.set_title('Эффективность потоков')
     ax3.legend()
     ax3.grid(True, alpha=0.3)
-    ax3.set_xticks([1, 2, 4, 6, 8])
-    
-    # График 4: Сводная таблица
+
+    # === Сводная таблица ===
     ax4 = axes[1, 1]
     ax4.axis('off')
-    
     summary_text = "СВОДКА РЕЗУЛЬТАТОВ:\n\n"
-    for test_case in df['test_case'].unique():
+    for test_case in unique_tests:
         case_data = df[df['test_case'] == test_case]
         best_idx = case_data['speedup'].idxmax()
         best_row = case_data.loc[best_idx]
-        
         summary_text += f"{test_case}:\n"
         summary_text += f"  Лучшее ускорение: {best_row['speedup']:.2f}x\n"
         summary_text += f"  При {best_row['threads']} потоках\n"
         summary_text += f"  Эффективность: {best_row['efficiency']:.1%}\n\n"
-    
-    ax4.text(0.1, 0.9, summary_text, transform=ax4.transAxes, fontsize=10, 
-             verticalalignment='top', family='monospace')
-    
+    ax4.text(0.1, 0.9, summary_text, transform=ax4.transAxes,
+             fontsize=10, verticalalignment='top', family='monospace')
+
     plt.tight_layout()
     plt.savefig('performance_analysis.png', dpi=300, bbox_inches='tight')
     plt.show()
+
+
 
 if __name__ == "__main__":
     # Сначала компилируем программу
