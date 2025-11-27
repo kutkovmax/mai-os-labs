@@ -1,0 +1,140 @@
+execve("./program2", ["./program2"], 0x7ffcffcc4af0 /* 32 vars */) = 0
+brk(NULL)                               = 0x833d000
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7c4289a3d000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "./lib1/glibc-hwcaps/x86-64-v3/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "./lib1/glibc-hwcaps/x86-64-v2/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "./lib1/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=31311, ...}) = 0
+mmap(NULL, 31311, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7c4289a35000
+close(3)                                = 0
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0p\236\2\0\0\0\0\0"..., 832) = 832
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 840, 64) = 840
+fstat(3, {st_mode=S_IFREG|0755, st_size=2003408, ...}) = 0
+pread64(3, "\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 840, 64) = 840
+mmap(NULL, 2055800, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7c428983f000
+mmap(0x7c4289867000, 1462272, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7c4289867000
+mmap(0x7c42899cc000, 352256, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x18d000) = 0x7c42899cc000
+mmap(0x7c4289a22000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1e2000) = 0x7c4289a22000
+mmap(0x7c4289a28000, 52856, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7c4289a28000
+close(3)                                = 0
+mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7c428983c000
+arch_prctl(ARCH_SET_FS, 0x7c428983c740) = 0
+set_tid_address(0x7c428983ca10)         = 16294
+set_robust_list(0x7c428983ca20, 24)     = 0
+rseq(0x7c428983c680, 0x20, 0, 0x53053053) = 0
+mprotect(0x7c4289a22000, 16384, PROT_READ) = 0
+mprotect(0x403000, 4096, PROT_READ)     = 0
+mprotect(0x7c4289a73000, 8192, PROT_READ) = 0
+prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+munmap(0x7c4289a35000, 31311)           = 0
+fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}) = 0
+getrandom("\x1d\x8b\x35\x56\xee\xbb\x10\xfe", 8, GRND_NONBLOCK) = 8
+brk(NULL)                               = 0x833d000
+brk(0x835e000)                          = 0x835e000
+write(1, "Program2 (dynamic loading mode)\n", 32) = 32
+openat(AT_FDCWD, "./lib1/libimpl1.so", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=15376, ...}) = 0
+getcwd("/workspaces/OS/Lab4-18", 128)   = 23
+mmap(NULL, 16416, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7c4289a38000
+mmap(0x7c4289a39000, 4096, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1000) = 0x7c4289a39000
+mmap(0x7c4289a3a000, 4096, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7c4289a3a000
+mmap(0x7c4289a3b000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7c4289a3b000
+close(3)                                = 0
+openat(AT_FDCWD, "./lib1/glibc-hwcaps/x86-64-v3/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "./lib1/glibc-hwcaps/x86-64-v2/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "./lib1/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=31311, ...}) = 0
+mmap(NULL, 31311, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7c4289834000
+close(3)                                = 0
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libm.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0644, st_size=977112, ...}) = 0
+mmap(NULL, 978968, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7c4289744000
+mmap(0x7c4289755000, 512000, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x11000) = 0x7c4289755000
+mmap(0x7c42897d2000, 393216, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x8e000) = 0x7c42897d2000
+mmap(0x7c4289832000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0xed000) = 0x7c4289832000
+close(3)                                = 0
+mprotect(0x7c4289832000, 4096, PROT_READ) = 0
+mprotect(0x7c4289a3b000, 4096, PROT_READ) = 0
+munmap(0x7c4289834000, 31311)           = 0
+write(1, "Library loaded: ./lib1/libimpl1."..., 35) = 35
+write(1, "\n", 1)                       = 1
+write(1, "Commands:\n", 10)             = 10
+write(1, " 0     -> switch library\n", 25) = 25
+write(1, " 1 A B -> PrimeCount\n", 21)  = 21
+write(1, " 2 X   -> E\n", 12)           = 12
+write(1, " -1    -> exit\n", 15)        = 15
+fstat(0, {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}) = 0
+write(1, "> ", 2)                       = 2
+read(0, 0x833ee70, 1024)                = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+--- SIGWINCH {si_signo=SIGWINCH, si_code=SI_KERNEL} ---
+--- SIGWINCH {si_signo=SIGWINCH, si_code=SI_KERNEL} ---
+read(0, 0x833ee70, 1024)                = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+--- SIGWINCH {si_signo=SIGWINCH, si_code=SI_KERNEL} ---
+read(0, "1 993 1337\n", 1024)           = 11
+write(1, "PrimeCount(993, 1337) = 50\n", 27) = 27
+write(1, "\n", 1)                       = 1
+write(1, "Commands:\n", 10)             = 10
+write(1, " 0     -> switch library\n", 25) = 25
+write(1, " 1 A B -> PrimeCount\n", 21)  = 21
+write(1, " 2 X   -> E\n", 12)           = 12
+write(1, " -1    -> exit\n", 15)        = 15
+write(1, "> ", 2)                       = 2
+read(0, "2 5252\n", 1024)               = 7
+write(1, "E(5252) = 2.718023\n", 19)    = 19
+write(1, "\n", 1)                       = 1
+write(1, "Commands:\n", 10)             = 10
+write(1, " 0     -> switch library\n", 25) = 25
+write(1, " 1 A B -> PrimeCount\n", 21)  = 21
+write(1, " 2 X   -> E\n", 12)           = 12
+write(1, " -1    -> exit\n", 15)        = 15
+write(1, "> ", 2)                       = 2
+read(0, "0\n", 1024)                    = 2
+munmap(0x7c4289a38000, 16416)           = 0
+munmap(0x7c4289744000, 978968)          = 0
+openat(AT_FDCWD, "./lib2/libimpl2.so", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\0\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=15392, ...}) = 0
+getcwd("/workspaces/OS/Lab4-18", 128)   = 23
+mmap(NULL, 16416, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7c4289a38000
+mmap(0x7c4289a39000, 4096, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1000) = 0x7c4289a39000
+mmap(0x7c4289a3a000, 4096, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7c4289a3a000
+mmap(0x7c4289a3b000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7c4289a3b000
+close(3)                                = 0
+mprotect(0x7c4289a3b000, 4096, PROT_READ) = 0
+write(1, "Library loaded: ./lib2/libimpl2."..., 35) = 35
+write(1, "\n", 1)                       = 1
+write(1, "Commands:\n", 10)             = 10
+write(1, " 0     -> switch library\n", 25) = 25
+write(1, " 1 A B -> PrimeCount\n", 21)  = 21
+write(1, " 2 X   -> E\n", 12)           = 12
+write(1, " -1    -> exit\n", 15)        = 15
+write(1, "> ", 2)                       = 2
+read(0, "1 994 1338\n", 1024)           = 11
+write(1, "PrimeCount(994, 1338) = 50\n", 27) = 27
+write(1, "\n", 1)                       = 1
+write(1, "Commands:\n", 10)             = 10
+write(1, " 0     -> switch library\n", 25) = 25
+write(1, " 1 A B -> PrimeCount\n", 21)  = 21
+write(1, " 2 X   -> E\n", 12)           = 12
+write(1, " -1    -> exit\n", 15)        = 15
+write(1, "> ", 2)                       = 2
+read(0, "2 5353\n", 1024)               = 7
+write(1, "E(5353) = 2.718282\n", 19)    = 19
+write(1, "\n", 1)                       = 1
+write(1, "Commands:\n", 10)             = 10
+write(1, " 0     -> switch library\n", 25) = 25
+write(1, " 1 A B -> PrimeCount\n", 21)  = 21
+write(1, " 2 X   -> E\n", 12)           = 12
+write(1, " -1    -> exit\n", 15)        = 15
+write(1, "> ", 2)                       = 2
+read(0, "-1\n", 1024)                   = 3
+munmap(0x7c4289a38000, 16416)           = 0
+write(1, "Program2 terminated\n", 20)   = 20
+exit_group(0)                           = ?
++++ exited with 0 +++
